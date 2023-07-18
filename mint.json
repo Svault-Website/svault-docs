@@ -1,6 +1,6 @@
 {
   "$schema": "https://mintlify.com/schema.json",
-  "name": "Starter Kit",
+  "name": "Svault",
   "logo": {
     "dark": "/logo/dark.svg",
     "light": "/logo/light.svg"
@@ -29,10 +29,7 @@
     "url": "https://dashboard.mintlify.com"
   },
   "tabs": [
-    {
-      "name": "API Reference",
-      "url": "api-reference"
-    }
+
   ],
   "anchors": [
     {
@@ -41,42 +38,28 @@
       "url": "https://mintlify.com/docs"
     },
     {
-      "name": "Community",
-      "icon": "slack",
-      "url": "https://mintlify.com/community"
+      "name": "Github",
+      "icon": "github",
+      "url": "https://github.com/oslabs-beta/Svault"
     },
     {
-      "name": "Blog",
+      "name": "Medium",
       "icon": "newspaper",
-      "url": "https://mintlify.com/blog"
+      "url": "https://medium.com/svault"
     }
   ],
   "navigation": [
     {
       "group": "Get Started",
-      "pages": ["introduction", "quickstart", "development"]
+      "pages": ["introduction", "get-started/installation"]
     },
     {
-      "group": "Essentials",
-      "pages": ["essentials/markdown", "essentials/code", "essentials/images", "essentials/settings", "essentials/navigation"]
-    },
-    {
-      "group": "API Documentation",
-      "pages": ["api-reference/authentication"]
-    },
-    {
-      "group": "Endpoint Examples",
-      "pages": [
-        "api-reference/endpoint/get",
-        "api-reference/endpoint/create",
-        "api-reference/endpoint/update",
-        "api-reference/endpoint/delete"
-      ]
+      "group": "Implementation",
+      "pages": ["implementation/native-authentication", "implementation/oauth", "implementation/using-both"]
     }
   ],
   "footerSocials": {
-    "twitter": "https://twitter.com/mintlify",
     "github": "https://github.com/oslabs-beta/Svault",
-    "linkedin": "https://www.linkedin.com/company/mintsearch"
+    "linkedin": "https://www.linkedin.com/company/svault"
   }
 }
