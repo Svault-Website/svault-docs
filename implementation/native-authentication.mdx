@@ -1,5 +1,87 @@
 ---
 title: 'Native Auth'
-description: 'Text, title, and styling in standard markdown'
-icon: 'text-size'
+description: 'Implement native username/password authentication'
+icon: 'shield-halved'
 ---
+
+1. In your `src` directory, create a `hooks.server.ts` file
+```TypeScript
+// Import if you would like to utilize native user registration and login
+import { SvaultNative } from 'svault';
+
+
+// Set redirect path to your desired endpoint upon user login
+const redirectPath = '/[yourPathHere]'; //ex. 'const redirectPath = '/homepage'
+
+
+// Svault native handler
+export const handle = SvaultNative(redirectPath);
+```
+2. Create a PostgreSQL table with the following columns:
+```SQL
+CREATE_TABLE [YOURTABLENAME] (
+    username VARCHAR NOT NULL,
+    password VARCHAR NOT NULL,
+)
+```
+3. In your `routes` directory, create a route called `login`. In your login `+page.svelte`, create form elements for taking in username and password inputs. Create buttons for login and register.
+    - Ensure the endpoints are set to `registerValidate` and `loginValidate`
+    - Create a separate button that is set to `logout` endpoint
+```TypeScript
+// Example routes/login/+page.svelte
+
+<form method="post">
+    <input
+        type="text"
+        placeholder="Username"
+        name="username"
+        required
+    />
+    <input
+        type="password"
+        placeholder="Password"
+        name="password"
+        required
+    />
+
+    <button type="submit" formaction="?/registerValidate">
+        Register
+    </button>
+    <button type="submit" formaction="?/loginValidate">
+        Login
+    </button>
+  </form>
+```
+```TypeScript
+// To implement logout functionality, create a button or anchor tag in your page.svelte that redirects to '/logout'
+
+<button>
+    <a href="/logout">Logout</a>
+</button>
+```
+4. In your `.env` file (create if you haven't done so) that takes in your database URI and user table name
+```TypeScript
+// Paste if using native authentication with a PostgreSQL database
+PG_URI = YOURDATABASEURI
+TABLE_NAME = YOURTABLENAME //ex. TABLE_NAME = users
+
+//MAX_AGE will determine the expiration time of the user's session
+MAX_AGE = Date.now() + {someNumberHere} * {someNumberHere}
+// ex. Date.now() + 1000 * 60 * 60 --> session will last for 1 hour
+```
+5. After submitting the form, the user will be redirected to the endpoint of your choice.
+    - Upon registering, the user will be added to the database with the username and a secure hashed password.
+    - On login, the user will be authenticated through your database.
+    - A browser cookie will be created as well as a session in local memory storage called "svault-auth". 
+
+
+    
+    ![Cookie](/images/cookiepicture.png)
+   
+
+
+    - The session will have an expiration time determined in your `.env` file.
+    - Sessions will automatically be cleaned and deleted upon expiration.
+    - On logout, the user will be redirected to the home page, the cookie will be deleted from the browser, and the session will be deleted from local memory store.
+
+<Check>And you're good to go!</Check>

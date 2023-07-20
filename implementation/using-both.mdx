@@ -1,5 +1,24 @@
 ---
 title: 'Using Both'
-description: 'Text, title, and styling in standard markdown'
-icon: 'text-size'
+description: 'Implement both native authentication and OAuth into your application'
+icon: 'user-secret'
 ---
+
+1. To implement native authentication and OAuth, you can use SvelteKit's [Sequence](https://kit.svelte.dev/docs/modules#sveltejs-kit-hooks-sequence) helper function.
+2. In your existing `hooks.server.ts` file, add the following:
+```TypeScript
+import { sequence } from '@sveltejs/kit/hooks';
+/*
+NOTE: CANNOT HAVE 2 HANDLE FUNCTIONS!
+
+export const handle = SvaultNative(redirectPath);
+export const handle = SvaultOauth({ providers });
+*/
+
+// Rename functions to their corresponding type of authentication
+export const native = SvaultNative(redirectPath);
+export const oauth = SvaultOauth({ providers });
+
+// Use sveltekit sequence method to run both hooks in sequence
+export const handle = sequence(oauth, native);
+```

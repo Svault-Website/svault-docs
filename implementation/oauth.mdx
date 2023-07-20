@@ -1,5 +1,89 @@
 ---
 title: 'OAuth'
-description: 'Text, title, and styling in standard markdown'
-icon: 'text-size'
+description: 'Implement OAuth into your application'
+icon: 'shield'
 ---
+
+1. When registering your application for OAuth set your callback url to match this format `/oauth/[provider]/validate`.
+
+2. In the `src` directory of your project, create a `hooks.server.ts` file and paste the following code:
+
+```TypeScript
+// Import if you would like to use Oauth login (necessary for all Oauth)
+import { SvaultOauth } from 'svault';
+
+
+// Import if you would like to use Github Oauth
+import { github } from 'svault';
+import { GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET } from '$env/static/private';
+
+
+// Import if you would like to use Google Oauth
+import { google } from 'svault';
+import { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET } from '$env/static/private';
+// Google callback urls have to match the callback url you setup in your development app so paste it here to pass into the Oauth function
+const googleCallback = 'http://localhost:5173/oauth/google/validate';
+
+
+// Import if you would like to use Discord Oauth
+import { discord } from 'svault';
+import { DISCORD_CLIENT_ID, DISCORD_CLIENT_SECRET } from "$env/static/private";
+// Discord callback urls have to match the callback url you setup in your development app so paste it here to pass into the Oauth function
+const discordCallback = 'http://localhost:5173/oauth/discord/validate';
+
+
+// Set redirect path to your desired endpoint upon user login
+const redirectPath = '/(yourPathHere)'; //ex. 'const redirectPath = '/redirectPage'
+
+
+// Place the Oauth providers here
+const providers = [
+    github(GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET, redirectPath),
+    google(GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, redirectPath, googleCallback),
+    discord(DISCORD_CLIENT_ID, DISCORD_CLIENT_SECRET, redirectPath, discordCallback)
+];
+
+// Svault Oauth handler
+export const handle = SvaultOauth({ providers });
+```
+
+3. Create an `.env` file at the root level of your project and define your client ID and secret as variables. Example:
+
+```TypeScript
+// Paste if using Discord Oauth
+DISCORD_CLIENT_ID = YOURIDHERE
+DISCORD_CLIENT_SECRET = YOURSECRETHERE
+
+// Paste if using Github Oauth
+GITHUB_CLIENT_ID = YOURIDHERE
+GITHUB_CLIENT_SECRET = YOURSECRETHERE
+
+// Paste if using Google Oauth
+GOOGLE_CLIENT_ID = YOURIDHERE
+GOOGLE_CLIENT_SECRET = YOURSECRETHERE
+```
+
+4. In your `+page.svelte` file that has your login page:
+
+   - Create a button or component for each provider you want to use, that will route to an endpoint of `/oauth/[provider-name-here]/auth`
+   - Make sure to include an anchor tag within the button and/or component.
+
+```TypeScript
+// Example +page.svelte file for github authentication
+
+<button>
+    <a href="/oauth/github/auth">Github</a>
+</button>
+
+<button>
+    <a href="/oauth/google/auth">Google</a>
+</button>
+
+<button>
+    <a href="/oauth/discord/auth">Discord</a>
+</button>
+```
+
+<Note>
+  OAuth providers are not set up to store any data in a database in this current iteration of Svault.
+</Note>
